@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import api from "../services/api"
 
 export default function Cobradores() {
   const [cobradores, setCobradores] = useState([])
   const [clientes, setClientes] = useState([])
+  const navigate = useNavigate()
 
   const cargarCobradores = async () => {
     try {
@@ -24,7 +26,6 @@ export default function Cobradores() {
     }
   }
 
-  // NUEVA FUNCION
   const cambiarEstado = async (id, estado) => {
     try {
       await api.put("/users/habilitar/" + id, {
@@ -32,7 +33,6 @@ export default function Cobradores() {
       })
 
       cargarCobradores()
-
     } catch (error) {
       console.error("Error cambiando estado", error)
     }
@@ -43,32 +43,78 @@ export default function Cobradores() {
   }, [])
 
   return (
-    <div>
+    <div style={{ fontSize: "20px", fontFamily: "Arial", color: "#16283aff" }}>
       <h2>Cobradores</h2>
 
-      <ul>
+      <button
+        onClick={() => navigate("/clientes")}
+        style={{
+          marginBottom: "20px",
+          padding: "8px 14px",
+          cursor: "pointer"
+        }}
+      >
+        Volver al inicio
+      </button>
+
+      <ul style={{ listStyle: "none", padding: 0 }}>
         {cobradores.map(c => (
-          <li key={c._id}>
-            {c.nombre}
+          <li
+            key={c._id}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "12px",
+              borderBottom: "1px solid #ddd"
+            }}
+          >
+            <span>{c.nombre}</span>
 
-            <button onClick={() => verClientes(c._id)}>
-              Ver clientes
-            </button>
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={() => verClientes(c._id)}
+                style={{
+                  padding: "6px 10px",
+                  cursor: "pointer"
+                }}
+              >
+                Ver clientes
+              </button>
 
-            {c.habilitado ? (
-              <button onClick={() => cambiarEstado(c._id, false)}>
-                Deshabilitar
-              </button>
-            ) : (
-              <button onClick={() => cambiarEstado(c._id, true)}>
-                Habilitar
-              </button>
-            )}
+              {c.habilitado ? (
+                <button
+                  onClick={() => cambiarEstado(c._id, false)}
+                  style={{
+                    padding: "6px 10px",
+                    cursor: "pointer",
+                    backgroundColor: "#819ed1ff",
+                    color: "white",
+                    border: "none"
+                  }}
+                >
+                  Deshabilitar
+                </button>
+              ) : (
+                <button
+                  onClick={() => cambiarEstado(c._id, true)}
+                  style={{
+                    padding: "6px 10px",
+                    cursor: "pointer",
+                    backgroundColor: "#3962b2ff",
+                    color: "white",
+                    border: "none"
+                  }}
+                >
+                  Habilitar
+                </button>
+              )}
+            </div>
           </li>
         ))}
       </ul>
 
-      <hr />
+      <hr style={{ margin: "25px 0" }} />
 
       <h3>Clientes asignados</h3>
 

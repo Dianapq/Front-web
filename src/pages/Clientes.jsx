@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import api from "../services/api"
 
 export default function Clientes() {
+
+  const navigate = useNavigate()
+
   const [clientes, setClientes] = useState([])
   const [cobradores, setCobradores] = useState([])
 
@@ -63,9 +67,30 @@ export default function Clientes() {
     }
   }
 
+  const cerrarSesion = () => {
+    localStorage.removeItem("token")
+    navigate("/")
+  }
+
   return (
-    <div>
-      <h2>Clientes</h2>
+    <div style={{ padding: "20px" }}>
+
+      <div style={{ fontSize: "20px", fontFamily: "Arial",color: "#16283aff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h2>Clientes</h2>
+
+        <button
+          onClick={cerrarSesion}
+          style={{
+            backgroundColor: "#334298ff",
+            color: "white",
+            border: "none",
+            padding: "8px 12px",
+            cursor: "pointer"
+          }}
+        >
+          Cerrar sesión
+        </button>
+      </div>
 
       <select
         value={cobradorId}
@@ -112,11 +137,12 @@ export default function Clientes() {
       <ul>
         {clientes.map(c => (
           <li key={c._id}>
-            {c.nombre} - {c.direccion} 
+            {c.nombre} - {c.direccion}
             {c.cobrador && ` (Cobrador: ${c.cobrador.nombre})`}
           </li>
         ))}
       </ul>
+
     </div>
   )
 }
