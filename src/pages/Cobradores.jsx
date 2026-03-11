@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import api from "../services/api"
 
 export default function Cobradores() {
+  const { slug } = useParams()
+  const navigate = useNavigate()
+
   const [cobradores, setCobradores] = useState([])
   const [clientes, setClientes] = useState([])
-  const navigate = useNavigate()
 
   const cargarCobradores = async () => {
     try {
@@ -28,10 +30,7 @@ export default function Cobradores() {
 
   const cambiarEstado = async (id, estado) => {
     try {
-      await api.put("/users/habilitar/" + id, {
-        habilitado: estado
-      })
-
+      await api.put("/users/habilitar/" + id, { habilitado: estado })
       cargarCobradores()
     } catch (error) {
       console.error("Error cambiando estado", error)
@@ -47,65 +46,28 @@ export default function Cobradores() {
       <h2>Cobradores</h2>
 
       <button
-        onClick={() => navigate("/clientes")}
-        style={{
-          marginBottom: "20px",
-          padding: "8px 14px",
-          cursor: "pointer"
-        }}
+        onClick={() => navigate(`/offices/${slug}/clientes`)}  // ← usa slug
+        style={{ marginBottom: "20px", padding: "8px 14px", cursor: "pointer" }}
       >
         Volver al inicio
       </button>
 
       <ul style={{ listStyle: "none", padding: 0 }}>
         {cobradores.map(c => (
-          <li
-            key={c._id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "12px",
-              borderBottom: "1px solid #ddd"
-            }}
-          >
+          <li key={c._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px", borderBottom: "1px solid #ddd" }}>
             <span>{c.nombre}</span>
-
             <div style={{ display: "flex", gap: "10px" }}>
-              <button
-                onClick={() => verClientes(c._id)}
-                style={{
-                  padding: "6px 10px",
-                  cursor: "pointer"
-                }}
-              >
+              <button onClick={() => verClientes(c._id)} style={{ padding: "6px 10px", cursor: "pointer" }}>
                 Ver clientes
               </button>
-
               {c.habilitado ? (
-                <button
-                  onClick={() => cambiarEstado(c._id, false)}
-                  style={{
-                    padding: "6px 10px",
-                    cursor: "pointer",
-                    backgroundColor: "#819ed1ff",
-                    color: "white",
-                    border: "none"
-                  }}
-                >
+                <button onClick={() => cambiarEstado(c._id, false)}
+                  style={{ padding: "6px 10px", cursor: "pointer", backgroundColor: "#819ed1ff", color: "white", border: "none" }}>
                   Deshabilitar
                 </button>
               ) : (
-                <button
-                  onClick={() => cambiarEstado(c._id, true)}
-                  style={{
-                    padding: "6px 10px",
-                    cursor: "pointer",
-                    backgroundColor: "#3962b2ff",
-                    color: "white",
-                    border: "none"
-                  }}
-                >
+                <button onClick={() => cambiarEstado(c._id, true)}
+                  style={{ padding: "6px 10px", cursor: "pointer", backgroundColor: "#3962b2ff", color: "white", border: "none" }}>
                   Habilitar
                 </button>
               )}
@@ -117,12 +79,9 @@ export default function Cobradores() {
       <hr style={{ margin: "25px 0" }} />
 
       <h3>Clientes asignados</h3>
-
       <ul>
         {clientes.map(cl => (
-          <li key={cl._id}>
-            {cl.nombre} - {cl.cedula} - {cl.telefono}
-          </li>
+          <li key={cl._id}>{cl.nombre} - {cl.cedula} - {cl.telefono}</li>
         ))}
       </ul>
     </div>

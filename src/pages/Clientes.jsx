@@ -1,14 +1,13 @@
 import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import api from "../services/api"
 
 export default function Clientes() {
-
+  const { slug } = useParams()
   const navigate = useNavigate()
 
   const [clientes, setClientes] = useState([])
   const [cobradores, setCobradores] = useState([])
-
   const [nombre, setNombre] = useState("")
   const [cedula, setCedula] = useState("")
   const [direccion, setDireccion] = useState("")
@@ -41,26 +40,13 @@ export default function Clientes() {
 
   const crearCliente = async (e) => {
     e.preventDefault()
-
-    if (!cobradorId) {
-      alert("Seleccione un cobrador")
-      return
-    }
-
+    if (!cobradorId) return alert("Seleccione un cobrador")
     try {
-      await api.post("/clientes", {
-        nombre,
-        cedula,
-        direccion,
-        telefono,
-        cobrador: cobradorId
-      })
-
+      await api.post("/clientes", { nombre, cedula, direccion, telefono, cobrador: cobradorId })
       setNombre("")
       setCedula("")
       setDireccion("")
       setTelefono("")
-
       obtenerClientes()
     } catch (error) {
       console.error("Error creando cliente")
@@ -69,66 +55,35 @@ export default function Clientes() {
 
   const cerrarSesion = () => {
     localStorage.removeItem("token")
-    navigate("/")
+    localStorage.removeItem("tenant")
+    localStorage.removeItem("rol")
+    navigate(`/offices/${slug}/login`)   // ← vuelve al login de esta oficina
   }
 
   return (
     <div style={{ padding: "20px" }}>
-
-      <div style={{ fontSize: "20px", fontFamily: "Arial",color: "#16283aff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ fontSize: "20px", fontFamily: "Arial", color: "#16283aff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h2>Clientes</h2>
-
         <button
           onClick={cerrarSesion}
-          style={{
-            backgroundColor: "#334298ff",
-            color: "white",
-            border: "none",
-            padding: "8px 12px",
-            cursor: "pointer"
-          }}
+          style={{ backgroundColor: "#334298ff", color: "white", border: "none", padding: "8px 12px", cursor: "pointer" }}
         >
           Cerrar sesión
         </button>
       </div>
 
-      <select
-        value={cobradorId}
-        onChange={(e) => setCobradorId(e.target.value)}
-      >
+      <select value={cobradorId} onChange={(e) => setCobradorId(e.target.value)}>
         <option value="">Seleccionar cobrador</option>
         {cobradores.map(c => (
-          <option key={c._id} value={c._id}>
-            {c.nombre}
-          </option>
+          <option key={c._id} value={c._id}>{c.nombre}</option>
         ))}
       </select>
 
       <form onSubmit={crearCliente}>
-        <input
-          placeholder="Nombre"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-        />
-
-        <input
-          placeholder="Cédula"
-          value={cedula}
-          onChange={(e) => setCedula(e.target.value)}
-        />
-
-        <input
-          placeholder="Dirección"
-          value={direccion}
-          onChange={(e) => setDireccion(e.target.value)}
-        />
-
-        <input
-          placeholder="Teléfono"
-          value={telefono}
-          onChange={(e) => setTelefono(e.target.value)}
-        />
-
+        <input placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        <input placeholder="Cédula" value={cedula} onChange={(e) => setCedula(e.target.value)} />
+        <input placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
+        <input placeholder="Teléfono" value={telefono} onChange={(e) => setTelefono(e.target.value)} />
         <button type="submit">Crear Cliente</button>
       </form>
 
@@ -142,7 +97,6 @@ export default function Clientes() {
           </li>
         ))}
       </ul>
-
     </div>
   )
 }
