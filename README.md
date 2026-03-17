@@ -1,16 +1,55 @@
-# React + Vite
+###Frontend Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Panel administrativo web para la gestión de oficinas, cobradores y créditos. 
 
-Currently, two official plugins are available:
+Framework: React 18 (Vite)
+Routing: React Router DOM v6
+HTTP: Axios
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+##Instalación
+    bashnpm install
+    npm run dev
 
-## React Compiler
+##Layout
+Es el contenedor con barra lateral para las rutas privadas del ADMIN:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+/offices/:slug/clientes
+/offices/:slug/cobradores
+/offices/:slug/creditos
 
-## Expanding the ESLint configuration
+###Páginas
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+##Superadmin
+
+Incluye login propio en la misma página.
+
+-Ver lista de oficinas con estado activo/inactivo.
+-Crear nueva oficina (nombre, slug para identificar las oficianas, teléfono, dirección).
+-Activar o desactivar una oficina.
+-Crear un ADMIN para una oficina desde un modal.
+
+##Clientes
+
+Gestión de clientes de la oficina.
+
+-Lista los cobradores activos de la oficina para asignar al crear un cliente.
+-Crea clientes con: nombre, cédula, dirección, teléfono y cobrador asignado.
+-Lista todos los clientes de la oficina con su cobrador.
+-Botón de cierre de sesión que redirige al login de la misma oficina.
+
+##Cobradores
+
+Gestión de cobradores de la oficina.
+
+-Lista los cobradores con botones para habilitar/deshabilitar.
+-Botón "Ver clientes" carga los clientes asignados a ese cobrador.
+-Modal integrado para crear un nuevo usuario (COBRADOR o ADMIN).
+
+
+##Creditos
+
+Gestión de créditos.
+
+-Selecciona un cliente del dropdown para crear o consultar créditos.
+-El interés fijo es 30%. El campo montoAPagar se calcula automáticamente: monto * 1.30.
+-Lista los créditos del cliente seleccionado con: monto prestado, total a pagar, saldo pendiente y estado.

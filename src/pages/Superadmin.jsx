@@ -58,7 +58,7 @@ export default function SuperAdmin() {
     try {
       const res = await api.post("/superadmin/oficinas", officeForm)
       setOffices((prev) => [res.data, ...prev])
-      setOfficeMsg("✅ Oficina creada. URL: /offices/" + res.data.slug + "/login")
+      setOfficeMsg("✅ Oficina creada. URL: https://front-web-ten.vercel.app/offices/" + res.data.slug + "/login")
       setOfficeForm({ name: "", slug: "", phone: "", address: "" })
     } catch (err) {
       setOfficeMsg("❌ " + (err.response?.data?.message || "Error creando oficina"))
