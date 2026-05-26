@@ -8,6 +8,7 @@ import Layout from "./components/Layout"
 import CrearUsuario from "./pages/CrearUsuario"
 import Cobradores from "./pages/Cobradores"
 import SuperAdmin from "./pages/Superadmin.jsx"
+import Documentos from "./pages/Documentos"   // ← nuevo
 
 function PrivateRoute({ children }) {
   const token = localStorage.getItem("token")
@@ -21,29 +22,19 @@ function App() {
       <TenantProvider>
         <BrowserRouter>
           <Routes>
-
-            {/* Ruta raíz — redirige si no hay slug */}
             <Route path="/" element={<Navigate to="/superadmin" replace />} />
-
-            {/* Login por oficina */}
             <Route path="/offices/:slug/login" element={<Login />} />
-
-            {/* Rutas privadas por oficina */}
             <Route path="/offices/:slug/crear-usuario"
               element={<PrivateRoute><CrearUsuario /></PrivateRoute>} />
-
             <Route path="/offices/:slug/cobradores"
               element={<PrivateRoute><Cobradores /></PrivateRoute>} />
-
             <Route path="/offices/:slug/clientes"
               element={<PrivateRoute><Layout><Clientes /></Layout></PrivateRoute>} />
-
             <Route path="/offices/:slug/creditos"
               element={<PrivateRoute><Layout><Creditos /></Layout></PrivateRoute>} />
-
-            {/* Superadmin — login propio dentro de la misma página */}
+            <Route path="/offices/:slug/documentos"
+              element={<PrivateRoute><Layout><Documentos /></Layout></PrivateRoute>} />  {/* ← nuevo */}
             <Route path="/superadmin" element={<SuperAdmin />} />
-
           </Routes>
         </BrowserRouter>
       </TenantProvider>
